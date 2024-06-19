@@ -837,11 +837,16 @@ const App = () => {
           padding: "15px 32px",
           textDecoration: "none",
           display: "inline-block",
-          fontSize: "16px",
-          margin: "4px 2px",
+          fontSize: "12px",
         }}
       >
-        <h1>Find Your Nearest FASC Location</h1>
+        <h1
+          style={{
+            margin: "0",
+          }}
+        >
+          Find Your Nearest FASC Location
+        </h1>
       </div>
       {error && <p>{error}</p>}
       {userPosition ? (
