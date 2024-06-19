@@ -1,0 +1,46 @@
+/* App.css */
+.shop-info-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .shop-info {
+    margin-bottom: 10px;
+  }
+  
+  .directions-button-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .directions-link {
+    background-color: #4d148c;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .directions-link:hover {
+    background-color: #37226b;
+  }
+  
+  @media (max-width: 600px) {
+    .shop-info-container {
+      flex-direction: column;
+    }
+  
+    .directions-link {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  

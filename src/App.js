@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import L from "leaflet";
 import "leaflet/dist/images/marker-shadow.png";
-
+import "./App.css";
 const locs = [
   {
     company: "Ayr Home Hardware",
@@ -727,6 +727,26 @@ const App = () => {
       setError("Geolocation is not supported by this browser.");
     }
   }, []);
+  const getCurrentDay = () => {
+    const days = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ];
+    const today = new Date();
+    return days[today.getDay()];
+  };
+  const isShopOpen = (shop) => {
+    const currentDay = getCurrentDay();
+    const currentTime = new Date().getHours() * 100 + new Date().getMinutes();
+    const closeTime = parseInt(shop[`${currentDay}_close`]);
+
+    return closeTime > currentTime;
+  };
 
   const showPosition = (position) => {
     console.log("Geolocation success:", position);
@@ -808,13 +828,27 @@ const App = () => {
 
   return (
     <div>
-      <h1>Find Your Nearest Drop-off Shop</h1>
+      <div
+        style={{
+          backgroundColor: "#4d148c",
+          border: "none",
+          color: "white",
+          textAlign: "center",
+          padding: "15px 32px",
+          textDecoration: "none",
+          display: "inline-block",
+          fontSize: "16px",
+          margin: "4px 2px",
+        }}
+      >
+        <h1>Find Your Nearest FASC Location</h1>
+      </div>
       {error && <p>{error}</p>}
       {userPosition ? (
         <MapContainer
           center={[userPosition.lat, userPosition.lon]}
           zoom={13}
-          style={{ height: "450px", width: "100%" }}
+          style={{ height: "350px", width: "100%" }}
           className="map-container"
         >
           <TileLayer
@@ -842,18 +876,47 @@ const App = () => {
       )}
 
       {nearestShop && (
-        <div>
-          <p>The nearest shop is {nearestShop.company}.</p>
-          <p>Estimated travel time: {travelTime} minute(s)</p>
-
-          <a
-            className="directions-link"
-            href={`https://www.google.com/maps/dir/?api=1&destination=${nearestShop.lat},${nearestShop.lon}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Get Directions
-          </a>
+        <div className="shop-info-container">
+          <div className="shop-info">
+            <p>The nearest shop is {nearestShop.company}.</p>
+            <p>
+              Address: {nearestShop.street}, {nearestShop.city}
+            </p>
+            <p>Estimated travel time: {travelTime} minute(s)</p>
+            <p>
+              Location Code: <strong>{nearestShop.location_code}</strong>
+            </p>
+            <p>
+              {nearestShop.company} is currently{" "}
+              <strong>{isShopOpen(nearestShop) ? "Open" : "Closed"}. </strong>
+              <br />
+              <strong>Hours:</strong>
+              <br />
+              Monday: {nearestShop.monday_close}
+              <br />
+              Tuesday: {nearestShop.tuesday_close}
+              <br />
+              Wednesday: {nearestShop.wednesday_close}
+              <br />
+              Thursday: {nearestShop.thursday_close}
+              <br />
+              Friday: {nearestShop.friday_close}
+              <br />
+              Saturday: {nearestShop.saturday_close}
+              <br />
+              Sunday: {nearestShop.sunday_close}
+            </p>
+          </div>
+          <div className="directions-button-container">
+            <a
+              className="directions-link"
+              href={`https://www.google.com/maps/dir/?api=1&destination=${nearestShop.lat},${nearestShop.lon}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get Directions
+            </a>
+          </div>
         </div>
       )}
     </div>
